@@ -10,77 +10,94 @@ load_dotenv()
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 SERPER_API_KEY = os.getenv("SERPER_API_KEY")
 
+
 # Create OpenAI client
 client = OpenAI(api_key=OPENAI_API_KEY)
 
-# Take user input
-name = input("Enter person name: ")
-company = input("Enter company name: ")
 
-# Serper API URL
-url = "https://google.serper.dev/search"
+def search_company(company):
+    # Serper API URL
+    url = "https://google.serper.dev/search"
 
-# Search query
-payload = {
-    "q": company
-}
+    # Search query
+    payload = {
+        "q": company
+    }
 
-# API headers
-headers = {
-    "X-API-KEY": SERPER_API_KEY,
-    "Content-Type": "application/json"
-}
+    # API headers
+    headers = {
+        "X-API-KEY": SERPER_API_KEY,
+        "Content-Type": "application/json"
+    }
 
-# Send request to Serper
-response = requests.post(url, json=payload, headers=headers)
+    # Send request to Serper
+    response = requests.post(url, json=payload, headers=headers)
 
-# Convert response into Python dictionary
-data = response.json()
+    # Convert response into Python dictionary
+    data = response.json()
 
-# Store search results
-search_info = ""
+    # Store search results
+    search_info = ""
 
-# Loop through first 3 search results
-for result in data["organic"][:3]:
+    # Loop through first 3 search results
+    for result in data["organic"][:3]:
 
-    title = result["title"]
-    snippet = result["snippet"]
+        title = result["title"]
+        snippet = result["snippet"]
 
-    search_info += f"Title: {title}\n"
-    search_info += f"Snippet: {snippet}\n\n"
+        search_info += f"Title: {title}\n"
+        search_info += f"Snippet: {snippet}\n\n"
+    return search_info
 
-# Create AI prompt
-prompt = f"""
-You are an AI meeting assistant.
 
-Person Name:
-{name}
+def generate_meeting_brief(name, company, search_info):
+    prompt = f"""
+    You are an AI meeting assistant.
 
-Company:
-{company}
+    Person Name:
+    {name}
 
-Latest Company Information:
-{search_info}
+    Company:
+    {company}
 
-Generate:
-1. Company Summary
-2. Latest News
-3. Meeting Talking Points
-4. Smart Questions To Ask
-"""
+    Latest Company Information:
+    {search_info}
 
-# Send prompt to OpenAI
-ai_response = client.chat.completions.create(
-    model="gpt-4.1-mini",
-    messages=[
-        {
-            "role": "user",
-            "content": prompt
-        }
-    ]
-)
+    Generate:
+    1. Company Summary
+    2. Latest News
+    3. Meeting Talking Points
+    4. Smart Questions To Ask
+    """
 
-# Print final result
-print("\n===== MEETING BRIEF =====\n")
+    ai_response = client.chat.completions.create(
+        model="gpt-4.1-mini",
+        messages=[
+            {
+                "role": "user",
+                "content": prompt
+            }
+        ]
+    )
 
-print(ai_response.choices[0].message.content)
+    return ai_response.choices[0].message.content
+
+
+def main():
+    name = input("Enter person name: ")
+    company = input("Enter company name: ")
+
+    search_info = search_company(company)
+
+    meeting_brief = generate_meeting_brief(
+        name,
+        company,
+        search_info
+    )
+
+    print("\n===== MEETING BRIEF =====\n")
+
+    print(meeting_brief)
+    
+if __name__ == "__main__":
+    main()
