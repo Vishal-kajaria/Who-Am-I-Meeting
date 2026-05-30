@@ -2,6 +2,7 @@ from openai import OpenAI
 from dotenv import load_dotenv
 import requests
 import os
+import gradio as gr
 
 # Load variables from .env file
 load_dotenv()
@@ -82,10 +83,7 @@ def generate_meeting_brief(name, company, search_info):
 
     return ai_response.choices[0].message.content
 
-
-def main():
-    name = input("Enter person name: ")
-    company = input("Enter company name: ")
+def who_am_i_meeting(name, company):
 
     search_info = search_company(company)
 
@@ -95,9 +93,16 @@ def main():
         search_info
     )
 
-    print("\n===== MEETING BRIEF =====\n")
+    return meeting_brief
 
-    print(meeting_brief)
-    
+app = gr.Interface(
+    fn=who_am_i_meeting,
+    inputs=["text", "text"],
+    outputs="text",
+    title="Who Am I Meeting?",
+    description="AI Meeting Assistant"
+)
+
+
 if __name__ == "__main__":
-    main()
+    app.launch()
