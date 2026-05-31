@@ -1,4 +1,5 @@
 from langchain_openai import ChatOpenAI
+from langchain_core.output_parsers import JsonOutputParser
 from dotenv import load_dotenv
 from langchain_core.prompts import PromptTemplate
 import requests
@@ -19,6 +20,7 @@ llm = ChatOpenAI(
     api_key=OPENAI_API_KEY
 )
 
+parser = JsonOutputParser()
 
 def search_company(company):
     # Serper API URL
@@ -52,7 +54,7 @@ def search_company(company):
 
         search_info += f"Title: {title}\n"
         search_info += f"Snippet: {snippet}\n\n"
-    return search_info
+    return search_info  
 
 
 def generate_meeting_brief(name, company, search_info):
@@ -73,9 +75,19 @@ def generate_meeting_brief(name, company, search_info):
     2. Latest News
     3. Meeting Talking Points
     4. Smart Questions To Ask
-    """)
+    
+    Return the response in this JSON format:
 
-    chain = prompt_template | llm
+    {{
+        "company_summary": "",
+        "latest_news": "",
+        "meeting_talking_points": "",
+        "smart_questions": ""
+    }}
+                                                   
+""")
+    
+    chain = prompt_template | llm | parser
 
     response = chain.invoke(
         {
@@ -85,7 +97,19 @@ def generate_meeting_brief(name, company, search_info):
         }
     )
 
-    return response.content
+    return f"""
+    Company Summary:
+    {response['company_summary']}
+
+    Latest News:
+    {response['latest_news']}
+
+    Meeting Talking Points:
+    {response['meeting_talking_points']}
+
+    Smart Questions:
+    {response['smart_questions']}
+    """
 
 def who_am_i_meeting(name, company):
 
