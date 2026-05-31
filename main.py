@@ -1,5 +1,6 @@
 from openai import OpenAI
 from dotenv import load_dotenv
+from langchain_core.prompts import PromptTemplate
 import requests
 import os
 import gradio as gr
@@ -52,7 +53,7 @@ def search_company(company):
 
 
 def generate_meeting_brief(name, company, search_info):
-    prompt = f"""
+    prompt_template = PromptTemplate.from_template("""
     You are an AI meeting assistant.
 
     Person Name:
@@ -69,7 +70,13 @@ def generate_meeting_brief(name, company, search_info):
     2. Latest News
     3. Meeting Talking Points
     4. Smart Questions To Ask
-    """
+    """)
+
+    prompt = prompt_template.format(
+        name=name,
+        company=company,
+        search_info=search_info
+    )
 
     ai_response = client.chat.completions.create(
         model="gpt-4.1-mini",
