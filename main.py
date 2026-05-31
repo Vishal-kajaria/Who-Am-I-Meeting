@@ -75,13 +75,15 @@ def generate_meeting_brief(name, company, search_info):
     4. Smart Questions To Ask
     """)
 
-    prompt = prompt_template.format(
-        name=name,
-        company=company,
-        search_info=search_info
-    )
+    chain = prompt_template | llm
 
-    response = llm.invoke(prompt)
+    response = chain.invoke(
+        {
+            "name": name,
+            "company": company,
+            "search_info": search_info
+        }
+    )
 
     return response.content
 
