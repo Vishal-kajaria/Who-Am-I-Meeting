@@ -1,4 +1,4 @@
-from openai import OpenAI
+from langchain_openai import ChatOpenAI
 from dotenv import load_dotenv
 from langchain_core.prompts import PromptTemplate
 import requests
@@ -14,7 +14,10 @@ SERPER_API_KEY = os.getenv("SERPER_API_KEY")
 
 
 # Create OpenAI client
-client = OpenAI(api_key=OPENAI_API_KEY)
+llm = ChatOpenAI(
+    model="gpt-4.1-mini",
+    api_key=OPENAI_API_KEY
+)
 
 
 def search_company(company):
@@ -78,17 +81,9 @@ def generate_meeting_brief(name, company, search_info):
         search_info=search_info
     )
 
-    ai_response = client.chat.completions.create(
-        model="gpt-4.1-mini",
-        messages=[
-            {
-                "role": "user",
-                "content": prompt
-            }
-        ]
-    )
+    response = llm.invoke(prompt)
 
-    return ai_response.choices[0].message.content
+    return response.content
 
 def who_am_i_meeting(name, company):
 
