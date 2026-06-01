@@ -1,6 +1,17 @@
+---
+title: Who Am I Meeting
+emoji: 🤝
+colorFrom: blue
+colorTo: purple
+sdk: gradio
+python_version: 3.10
+app_file: main.py
+pinned: false
+---
+
 # Who Am I Meeting? 🤝
 
-An AI-powered meeting preparation assistant built with LangChain, OpenAI, Serper, and Gradio.
+An AI-powered meeting preparation assistant that generates company insights, talking points, and smart questions before meetings.
 
 ## Features
 
@@ -72,7 +83,6 @@ http://127.0.0.1:7860
 
 ## Future Improvements
 
-* Deployment on Hugging Face Spaces
 * Better UI styling and themes
 * Company logo integration
 * Export results to PDF
