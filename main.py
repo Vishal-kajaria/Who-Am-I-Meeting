@@ -39,6 +39,7 @@ def search_company(company):
 
     # Send request to Serper
     response = requests.post(url, json=payload, headers=headers)
+    response.raise_for_status()
 
     # Convert response into Python dictionary
     data = response.json()
@@ -47,7 +48,7 @@ def search_company(company):
     search_info = ""
 
     # Loop through first 3 search results
-    for result in data["organic"][:3]:
+    for result in data.get("organic", [])[:3]:
 
         title = result["title"]
         snippet = result["snippet"]
