@@ -1,0 +1,6 @@
+gradio>=6.15.1
+langchain-openai>=1.2.2
+langchain-core>=1.0.0
+openai>=2.38.0
+python-dotenv>=1.2.2
+requests>=2.34.2
