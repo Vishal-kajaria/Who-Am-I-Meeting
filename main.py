@@ -113,6 +113,12 @@ def generate_meeting_brief(name, company, search_info):
 
 def who_am_i_meeting(name, company):
 
+    if not name.strip():
+        return "Please enter a person's name."
+
+    if not company.strip():
+        return "Please enter a company name."
+
     search_info = search_company(company)
 
     meeting_brief = generate_meeting_brief(
@@ -125,10 +131,34 @@ def who_am_i_meeting(name, company):
 
 app = gr.Interface(
     fn=who_am_i_meeting,
-    inputs=["text", "text"],
-    outputs="text",
-    title="Who Am I Meeting?",
-    description="AI Meeting Assistant"
+    inputs=[
+        gr.Textbox(
+            label="Person Name",
+            placeholder="Enter the person's name"
+        ),
+        gr.Textbox(
+            label="Company Name",
+            placeholder="Enter the company name"
+        )
+    ],
+    outputs=gr.Textbox(
+        label="Meeting Brief",
+        lines=20
+    ),
+
+    title="Who Am I Meeting? 🤝",
+    description="""
+    Generate an AI-powered meeting brief using live company information.
+
+    Enter a person's name and company name to receive:
+    • Company Summary
+    • Latest News
+    • Meeting Talking Points
+    • Smart Questions To Ask
+    """,
+
+    submit_btn="Generate Brief",
+    clear_btn="Reset"
 )
 
 
