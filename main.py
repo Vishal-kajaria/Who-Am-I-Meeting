@@ -98,69 +98,85 @@ def generate_meeting_brief(name, company, search_info):
     )
 
     return f"""
-    Company Summary:
+    ## Company Summary
     {response['company_summary']}
 
-    Latest News:
+    ## Latest News
     {response['latest_news']}
 
-    Meeting Talking Points:
+    ## Meeting Talking Points
     {response['meeting_talking_points']}
 
-    Smart Questions:
+    ## Smart Questions
     {response['smart_questions']}
     """
 
+def show_loading():
+    return "⏳ Generating meeting brief..."
+
+def clear_loading():
+    return ""
+
 def who_am_i_meeting(name, company):
 
-    if not name.strip():
-        return "Please enter a person's name."
+    try:
+        if not name.strip():
+            return "Please enter a person's name."
 
-    if not company.strip():
-        return "Please enter a company name."
+        if not company.strip():
+            return "Please enter a company name."
 
-    search_info = search_company(company)
+        search_info = search_company(company)
 
-    meeting_brief = generate_meeting_brief(
-        name,
-        company,
-        search_info
-    )
-
-    return meeting_brief
-
-app = gr.Interface(
-    fn=who_am_i_meeting,
-    inputs=[
-        gr.Textbox(
-            label="Person Name",
-            placeholder="Enter the person's name"
-        ),
-        gr.Textbox(
-            label="Company Name",
-            placeholder="Enter the company name"
+        meeting_brief = generate_meeting_brief(
+            name,
+            company,
+            search_info
         )
-    ],
-    outputs=gr.Textbox(
-        label="Meeting Brief",
-        lines=20
-    ),
 
-    title="Who Am I Meeting? 🤝",
-    description="""
+        return meeting_brief
+    except Exception as e:
+        return f"An error occurred: {str(e)}"
+
+with gr.Blocks() as app:
+
+    gr.Markdown("# Who Am I Meeting? 🤝")
+
+    gr.Markdown("""
     Generate an AI-powered meeting brief using live company information.
+    """)
 
-    Enter a person's name and company name to receive:
-    • Company Summary
-    • Latest News
-    • Meeting Talking Points
-    • Smart Questions To Ask
-    """,
+    with gr.Row():
 
-    submit_btn="Generate Brief",
-    clear_btn="Reset"
-)
+        with gr.Column(scale=1):
 
+            name_input = gr.Textbox(
+                label="Person Name",
+                placeholder="Enter the person's name"
+            )
+
+            company_input = gr.Textbox(
+                label="Company Name",
+                placeholder="Enter the company name"
+            )
+
+            generate_button = gr.Button("Generate Brief")
+
+        with gr.Column(scale=2):
+            status_box = gr.Markdown()
+            output_box = gr.Markdown()
+
+    generate_button.click(
+        fn=show_loading,
+        outputs=status_box
+    ).then(
+        fn=who_am_i_meeting,
+        inputs=[name_input, company_input],
+        outputs=output_box
+    ).then(
+        fn=clear_loading,
+        outputs=status_box
+    )
 
 if __name__ == "__main__":
     app.launch()
