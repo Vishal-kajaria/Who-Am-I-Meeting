@@ -22,7 +22,7 @@ GitHub Repository: [Who Am I Meeting Repository](https://github.com/Vishal-kajar
 
 # Who Am I Meeting? 🤝
 
-An AI-powered meeting preparation assistant that generates company insights, latest news, key products and services, talking points, smart questions, competitor analysis, and preparation checklists before meetings.
+An AI-powered meeting preparation assistant that generates company summaries, quick facts, latest news, key products and services, meeting talking points, smart questions, preparation checklists, competitor analysis, potential challenges, and downloadable PDF meeting briefs.
 
 Built and deployed using Gradio, OpenAI, LangChain, Serper API, and Hugging Face Spaces.
 
@@ -43,8 +43,9 @@ Built and deployed using Gradio, OpenAI, LangChain, Serper API, and Hugging Face
 * Competitor analysis
 * Potential challenges and risk analysis
 * Key products and services overview
+* Company quick facts (Founded Year, Headquarters, Industry, CEO, Website)
+* PDF export for meeting briefs
 * Loading indicator for better user experience
-
 
 ## Tech Stack
 
@@ -105,6 +106,7 @@ http://127.0.0.1:7860
 5. OpenAI generates:
 
    * Company Summary
+   * Company Quick Facts
    * Latest News
    * Key Products & Services
    * Meeting Talking Points
@@ -113,10 +115,10 @@ http://127.0.0.1:7860
    * Competitor Analysis
    * Potential Challenges
 6. Results are displayed in a structured meeting brief.
-
+7. User can download the generated meeting brief as a PDF.
 
 ## Future Improvements
 
-* Company Quick Facts
-* PDF Export
 * Meeting Readiness Score
+* Company Logo Integration
+* Enhanced News Retrieval
