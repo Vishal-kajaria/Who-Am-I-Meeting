@@ -94,7 +94,15 @@ def generate_meeting_brief(name, company, meeting_type, search_info):
     - Major competitors
     - Key differentiators
     - Market position
-                                                                                                  
+
+    7. Potential Challenges
+
+    Identify:
+    - Current business challenges
+    - Market risks
+    - Industry challenges
+    - Areas that may require careful discussion
+                                                                                                                                        
     Return the response in this JSON format:
 
     {{
@@ -102,12 +110,11 @@ def generate_meeting_brief(name, company, meeting_type, search_info):
         "latest_news": "",
         "meeting_talking_points": "",
         "smart_questions": "",
-        "preparation_checklist": ""
-        "competitor_analysis": ""
-    }}
-                                                   
-""")
-    
+        "preparation_checklist": "",
+        "competitor_analysis": "",
+        "potential_challenges": ""
+    }}                                               
+""")    
     chain = prompt_template | llm | parser
 
     response = chain.invoke(
@@ -119,30 +126,28 @@ def generate_meeting_brief(name, company, meeting_type, search_info):
         }
     )
 
-    return f"""## Company Summary
+    return (
+        f"## Company Summary\n\n"
+        f"{response['company_summary']}\n\n"
 
-    {response['company_summary']}
+        f"## Latest News\n\n"
+        f"{response['latest_news']}\n\n"
 
-    ## Latest News
+        f"## Meeting Talking Points\n\n"
+        f"{response['meeting_talking_points']}\n\n"
 
-    {response['latest_news']}
+        f"## Smart Questions\n\n"
+        f"{response['smart_questions']}\n\n"
 
-    ## Meeting Talking Points
+        f"## Preparation Checklist\n\n"
+        f"{response['preparation_checklist']}\n\n"
 
-    {response['meeting_talking_points']}
-
-    ## Smart Questions
-
-    {response['smart_questions']}
-
-    ## Preparation Checklist
-
-    {response['preparation_checklist']}
-
-    ## Competitor Analysis
-
-    {response['competitor_analysis']}
-    """
+        f"## Competitor Analysis\n\n"
+        f"{response['competitor_analysis']}\n\n"
+        
+        f"## Potential Challenges\n\n"
+        f"{response['potential_challenges']}"
+    )
 
 def show_loading():
     return "⏳ Generating meeting brief..."
@@ -151,7 +156,6 @@ def clear_loading():
     return ""
 
 def who_am_i_meeting(name, company, meeting_type):
-
     try:
         if not name.strip():
             return "Please enter a person's name."
