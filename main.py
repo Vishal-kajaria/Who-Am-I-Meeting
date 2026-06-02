@@ -103,6 +103,14 @@ def generate_meeting_brief(name, company, meeting_type, search_info):
     - Industry challenges
     - Areas that may require careful discussion
                                                                                                                                         
+    8. Key Products & Services
+
+    Identify:
+    - Main products
+    - Main services
+    - Popular offerings
+    - Revenue-driving solutions
+                                                   
     Return the response in this JSON format:
 
     {{
@@ -112,7 +120,8 @@ def generate_meeting_brief(name, company, meeting_type, search_info):
         "smart_questions": "",
         "preparation_checklist": "",
         "competitor_analysis": "",
-        "potential_challenges": ""
+        "potential_challenges": "",
+        "key_products_services": ""
     }}                                               
 """)    
     chain = prompt_template | llm | parser
@@ -144,9 +153,12 @@ def generate_meeting_brief(name, company, meeting_type, search_info):
 
         f"## Competitor Analysis\n\n"
         f"{response['competitor_analysis']}\n\n"
-        
+
         f"## Potential Challenges\n\n"
-        f"{response['potential_challenges']}"
+        f"{response['potential_challenges']}\n\n"
+
+        f"## Key Products & Services\n\n"
+        f"{response['key_products_services']}\n\n"
     )
 
 def show_loading():
