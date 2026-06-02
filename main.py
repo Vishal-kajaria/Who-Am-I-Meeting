@@ -2,6 +2,8 @@ from langchain_openai import ChatOpenAI
 from langchain_core.output_parsers import JsonOutputParser
 from dotenv import load_dotenv
 from langchain_core.prompts import PromptTemplate
+from reportlab.platypus import SimpleDocTemplate, Paragraph
+from reportlab.lib.styles import getSampleStyleSheet
 import requests
 import os
 import gradio as gr
@@ -178,6 +180,23 @@ def generate_meeting_brief(name, company, meeting_type, search_info):
         f"{response['key_products_services']}\n\n"
     )
 
+def generate_pdf(content, company):
+
+    pdf_file = f"{company}_meeting_brief.pdf"
+
+    doc = SimpleDocTemplate(pdf_file)
+
+    styles = getSampleStyleSheet()
+
+    story = [
+        Paragraph("Meeting Brief", styles["Title"]),
+        Paragraph(content.replace("\n", "<br/>"), styles["BodyText"])
+    ]
+
+    doc.build(story)
+
+    return pdf_file
+
 def show_loading():
     return "⏳ Generating meeting brief..."
 
@@ -204,9 +223,11 @@ def who_am_i_meeting(name, company, meeting_type):
             search_info
         )
 
-        return meeting_brief
+        pdf_file = generate_pdf(meeting_brief, company)
+        
+        return meeting_brief, pdf_file
     except Exception as e:
-        return f"An error occurred: {str(e)}"
+        return f"An error occurred: {str(e)}", None
 
 with gr.Blocks() as app:
 
@@ -244,6 +265,7 @@ with gr.Blocks() as app:
         with gr.Column(scale=2):
             status_box = gr.Markdown()
             output_box = gr.Markdown(height=600)
+            pdf_output = gr.File(label="Download Meeting Brief")
 
     generate_button.click(
         fn=show_loading,
@@ -251,7 +273,7 @@ with gr.Blocks() as app:
     ).then(
         fn=who_am_i_meeting,
         inputs=[name_input, company_input, meeting_type],
-        outputs=output_box
+        outputs=[output_box, pdf_output]
     ).then(
         fn=clear_loading,
         outputs=status_box
