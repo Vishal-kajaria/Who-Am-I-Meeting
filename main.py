@@ -88,6 +88,13 @@ def generate_meeting_brief(name, company, meeting_type, search_info):
     3. Meeting Talking Points
     4. Smart Questions To Ask
     5. Preparation Checklist
+    6. Competitor Analysis
+
+    For the company, identify:
+    - Major competitors
+    - Key differentiators
+    - Market position
+                                                                                                  
     Return the response in this JSON format:
 
     {{
@@ -96,6 +103,7 @@ def generate_meeting_brief(name, company, meeting_type, search_info):
         "meeting_talking_points": "",
         "smart_questions": "",
         "preparation_checklist": ""
+        "competitor_analysis": ""
     }}
                                                    
 """)
@@ -130,6 +138,10 @@ def generate_meeting_brief(name, company, meeting_type, search_info):
     ## Preparation Checklist
 
     {response['preparation_checklist']}
+
+    ## Competitor Analysis
+
+    {response['competitor_analysis']}
     """
 
 def show_loading():
