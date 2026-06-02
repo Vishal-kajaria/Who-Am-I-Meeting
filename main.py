@@ -58,7 +58,7 @@ def search_company(company):
     return search_info  
 
 
-def generate_meeting_brief(name, company, search_info):
+def generate_meeting_brief(name, company, meeting_type, search_info):
     prompt_template = PromptTemplate.from_template("""
     You are an AI meeting assistant.
 
@@ -68,22 +68,34 @@ def generate_meeting_brief(name, company, search_info):
     Company:
     {company}
 
+    Meeting Type:
+    {meeting_type}
+
     Latest Company Information:
     {search_info}
 
+    Generate a meeting brief specifically for a {meeting_type}.
+
+    Use the meeting type to tailor:
+    - Meeting talking points
+    - Smart questions
+    - Recommendations
+
     Generate:
+
     1. Company Summary
     2. Latest News
     3. Meeting Talking Points
     4. Smart Questions To Ask
-    
+    5. Preparation Checklist
     Return the response in this JSON format:
 
     {{
         "company_summary": "",
         "latest_news": "",
         "meeting_talking_points": "",
-        "smart_questions": ""
+        "smart_questions": "",
+        "preparation_checklist": ""
     }}
                                                    
 """)
@@ -94,22 +106,30 @@ def generate_meeting_brief(name, company, search_info):
         {
             "name": name,
             "company": company,
+            "meeting_type": meeting_type,
             "search_info": search_info
         }
     )
 
-    return f"""
-    ## Company Summary
+    return f"""## Company Summary
+
     {response['company_summary']}
 
     ## Latest News
+
     {response['latest_news']}
 
     ## Meeting Talking Points
+
     {response['meeting_talking_points']}
 
     ## Smart Questions
+
     {response['smart_questions']}
+
+    ## Preparation Checklist
+
+    {response['preparation_checklist']}
     """
 
 def show_loading():
@@ -118,7 +138,7 @@ def show_loading():
 def clear_loading():
     return ""
 
-def who_am_i_meeting(name, company):
+def who_am_i_meeting(name, company, meeting_type):
 
     try:
         if not name.strip():
@@ -127,11 +147,15 @@ def who_am_i_meeting(name, company):
         if not company.strip():
             return "Please enter a company name."
 
+        if not meeting_type:
+            return "Please select a meeting type."
+
         search_info = search_company(company)
 
         meeting_brief = generate_meeting_brief(
             name,
             company,
+            meeting_type,
             search_info
         )
 
@@ -160,19 +184,28 @@ with gr.Blocks() as app:
                 label="Company Name",
                 placeholder="Enter the company name"
             )
-
+            meeting_type = gr.Dropdown(
+                choices=[
+                    "Job Interview",
+                    "Client Meeting",
+                    "Networking",
+                    "Sales Call",
+                    "Partnership Discussion"
+                ],
+                label="Meeting Type"
+            )
             generate_button = gr.Button("Generate Brief")
 
         with gr.Column(scale=2):
             status_box = gr.Markdown()
-            output_box = gr.Markdown()
+            output_box = gr.Markdown(height=600)
 
     generate_button.click(
         fn=show_loading,
         outputs=status_box
     ).then(
         fn=who_am_i_meeting,
-        inputs=[name_input, company_input],
+        inputs=[name_input, company_input, meeting_type],
         outputs=output_box
     ).then(
         fn=clear_loading,
