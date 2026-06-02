@@ -110,7 +110,20 @@ def generate_meeting_brief(name, company, meeting_type, search_info):
     - Main services
     - Popular offerings
     - Revenue-driving solutions
-                                                   
+
+    9. Company Quick Facts
+
+    Return ONLY in this markdown format:
+
+    - Founded Year: <value>
+    - Headquarters: <value>
+    - Industry: <value>
+    - CEO: <value>
+    - Official Website: <value>
+
+    Do not return as a paragraph.
+    Do not combine multiple facts on one line.
+                                                                        
     Return the response in this JSON format:
 
     {{
@@ -121,7 +134,8 @@ def generate_meeting_brief(name, company, meeting_type, search_info):
         "preparation_checklist": "",
         "competitor_analysis": "",
         "potential_challenges": "",
-        "key_products_services": ""
+        "key_products_services": "",
+        "company_quick_facts": ""
     }}                                               
 """)    
     chain = prompt_template | llm | parser
@@ -138,6 +152,9 @@ def generate_meeting_brief(name, company, meeting_type, search_info):
     return (
         f"## Company Summary\n\n"
         f"{response['company_summary']}\n\n"
+
+        f"## Company Quick Facts\n\n"
+        f"{response['company_quick_facts']}\n\n"
 
         f"## Latest News\n\n"
         f"{response['latest_news']}\n\n"
