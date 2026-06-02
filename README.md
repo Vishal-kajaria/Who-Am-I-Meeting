@@ -10,17 +10,41 @@ app_file: main.py
 pinned: false
 ---
 
+## Live Demo
+
+Hugging Face Space: [Who Am I Meeting](https://huggingface.co/spaces/vishalkajaria/who-am-i-meeting)
+
+## Source Code
+GitHub Repository: [Who Am I Meeting Repository](https://github.com/Vishal-kajaria/Who-Am-I-Meeting)
+
+
+
+
 # Who Am I Meeting? 🤝
 
-An AI-powered meeting preparation assistant that generates company insights, talking points, and smart questions before meetings.
+An AI-powered meeting preparation assistant that generates company insights, latest news, key products and services, talking points, smart questions, competitor analysis, and preparation checklists before meetings.
+
+Built and deployed using Gradio, OpenAI, LangChain, Serper API, and Hugging Face Spaces.
 
 ## Features
 
 * Generate company summaries
 * Fetch latest company information
-* Create meeting talking points
-* Generate smart questions to ask during meetings
+* Generate meeting talking points
+* Generate smart questions
+* Meeting Type support:
+
+  * Job Interview
+  * Client Meeting
+  * Networking
+  * Sales Call
+  * Partnership Discussion
+* Generate preparation checklists
+* Competitor analysis
+* Potential challenges and risk analysis
+* Key products and services overview
 * Loading indicator for better user experience
+
 
 ## Tech Stack
 
@@ -29,6 +53,9 @@ An AI-powered meeting preparation assistant that generates company insights, tal
 * OpenAI GPT-4.1 Mini
 * Serper API
 * Gradio
+* Git
+* GitHub
+* Hugging Face Spaces
 
 ## Project Structure
 
@@ -72,19 +99,24 @@ http://127.0.0.1:7860
 ## How It Works
 
 1. User enters a person's name and company name.
-2. Serper API retrieves recent company information.
-3. LangChain creates a prompt using the company data.
-4. OpenAI generates:
+2. User selects a meeting type.
+3. Serper API retrieves recent company information.
+4. LangChain builds a structured prompt using company data and meeting type.
+5. OpenAI generates:
 
    * Company Summary
    * Latest News
+   * Key Products & Services
    * Meeting Talking Points
    * Smart Questions
-5. Results are displayed in a user-friendly interface.
+   * Preparation Checklist
+   * Competitor Analysis
+   * Potential Challenges
+6. Results are displayed in a structured meeting brief.
+
 
 ## Future Improvements
 
-* Better UI styling and themes
-* Company logo integration
-* Export results to PDF
-* Meeting history storage
+* Company Quick Facts
+* PDF Export
+* Meeting Readiness Score
