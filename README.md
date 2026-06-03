@@ -22,9 +22,9 @@ GitHub Repository: [Who Am I Meeting Repository](https://github.com/Vishal-kajar
 
 # Who Am I Meeting? 🤝
 
-An AI-powered meeting preparation assistant that generates company summaries, quick facts, latest news, key products and services, meeting talking points, smart questions, preparation checklists, competitor analysis, potential challenges, and downloadable PDF meeting briefs.
+An AI-powered meeting preparation and meeting history assistant that helps users prepare for interviews, client meetings, networking sessions, sales calls, and partnership discussions by generating company intelligence, meeting talking points, smart questions, preparation checklists, storing meeting history, and exporting downloadable PDF meeting briefs.
 
-Built and deployed using Gradio, OpenAI, LangChain, Serper API, and Hugging Face Spaces.
+Built and deployed using Gradio, OpenAI, LangChain, Serper API, Supabase, and Hugging Face Spaces.
 
 ## Features
 
@@ -44,6 +44,8 @@ Built and deployed using Gradio, OpenAI, LangChain, Serper API, and Hugging Face
 * Potential challenges and risk analysis
 * Key products and services overview
 * Company quick facts (Founded Year, Headquarters, Industry, CEO, Website)
+* Meeting history storage using Supabase
+* View last 10 recent meetings
 * PDF export for meeting briefs
 * Loading indicator for better user experience
 
@@ -53,6 +55,7 @@ Built and deployed using Gradio, OpenAI, LangChain, Serper API, and Hugging Face
 * LangChain
 * OpenAI GPT-4.1 Mini
 * Serper API
+* Supabase
 * Gradio
 * Git
 * GitHub
@@ -68,6 +71,26 @@ uv.lock          # Dependency lock file
 .env             # Environment variables (not committed)
 ```
 
+## Architecture
+
+```text
+User Input
+↓
+Gradio UI
+↓
+Serper API (Company Research)
+↓
+LangChain Prompt Construction
+↓
+OpenAI GPT-4.1 Mini
+↓
+Meeting Brief Generation
+↓
+Supabase (Meeting History Storage)
+↓
+PDF Export
+```
+
 ## Environment Variables
 
 Create a `.env` file:
@@ -75,6 +98,8 @@ Create a `.env` file:
 ```env
 OPENAI_API_KEY=your_openai_api_key
 SERPER_API_KEY=your_serper_api_key
+SUPABASE_URL=your_supabase_url
+SUPABASE_KEY=your_supabase_key
 ```
 
 ## Installation
@@ -116,9 +141,13 @@ http://127.0.0.1:7860
    * Potential Challenges
 6. Results are displayed in a structured meeting brief.
 7. User can download the generated meeting brief as a PDF.
+8. Meeting details are stored in Supabase for future retrieval.
+9. Users can view their recent meeting history.
 
 ## Future Improvements
 
-* Meeting Readiness Score
+* Meeting Notes & Follow-ups
 * Company Logo Integration
-* Enhanced News Retrieval
+* Meeting Dashboard & Analytics
+* Search and Filter Meeting History
+* Meeting Readiness Score
