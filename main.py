@@ -195,6 +195,46 @@ def save_search(person_name, company_name, meeting_type):
         }
     ).execute()
 
+def get_recent_meetings():
+
+    response = (
+        supabase.table("meeting_history")
+        .select("*")
+        .order("created_at", desc=True)
+        .limit(10)
+        .execute()
+    )
+
+    meetings = response.data
+
+    if not meetings:
+        return "No meeting history found."
+
+    history_text = "## Recent Meetings\n\n"
+
+    for meeting in meetings:
+
+        history_text += (
+            f"- {meeting['person_name']} | "
+            f"{meeting['company_name']} | "
+            f"{meeting['meeting_type']}\n\n"
+        )
+
+    return history_text
+
+def show_history():
+
+    return (
+        gr.update(
+            value=get_recent_meetings(),
+            visible=True
+        ),
+        gr.update(
+            value="",
+            visible=False
+        )
+    )
+
 def generate_pdf(content, company):
 
     pdf_file = f"{company.replace(' ', '_')}_meeting_brief.pdf"
@@ -204,7 +244,7 @@ def generate_pdf(content, company):
     styles = getSampleStyleSheet()
 
     story = [
-        Paragraph("Meeting Brief", styles["Title"]),
+        Paragraph(f"{company} Meeting Brief", styles["Title"]),
         Paragraph(content.replace("\n", "<br/>"), styles["BodyText"])
     ]
 
@@ -213,9 +253,14 @@ def generate_pdf(content, company):
     return pdf_file
 
 def show_loading():
-    return "⏳ Generating meeting brief..."
 
-def clear_loading():
+    return (
+        "⏳ Generating meeting brief...",
+        gr.update(visible=False),
+        gr.update(visible=True)
+    )
+
+def clear_loading():    
     return ""
 
 def who_am_i_meeting(name, company, meeting_type):
@@ -238,7 +283,7 @@ def who_am_i_meeting(name, company, meeting_type):
             search_info
         )
 
-        save_search(name,company,meeting_type)
+        save_search(name, company, meeting_type)
 
         pdf_file = generate_pdf(meeting_brief, company)
         
@@ -278,15 +323,19 @@ with gr.Blocks() as app:
                 label="Meeting Type"
             )
             generate_button = gr.Button("Generate Brief")
+            history_button = gr.Button("Show History")
 
         with gr.Column(scale=2):
             status_box = gr.Markdown()
-            output_box = gr.Markdown(height=600)
+            history_box = gr.Markdown(visible=False)
+            output_box = gr.Markdown(height=800)
+
+        with gr.Row():
             pdf_output = gr.File(label="Download Meeting Brief")
 
     generate_button.click(
         fn=show_loading,
-        outputs=status_box
+        outputs=[status_box, history_box, output_box]
     ).then(
         fn=who_am_i_meeting,
         inputs=[name_input, company_input, meeting_type],
@@ -294,6 +343,10 @@ with gr.Blocks() as app:
     ).then(
         fn=clear_loading,
         outputs=status_box
+    )
+    history_button.click(
+        fn=show_history,
+        outputs=[history_box, output_box]
     )
 
 if __name__ == "__main__":
