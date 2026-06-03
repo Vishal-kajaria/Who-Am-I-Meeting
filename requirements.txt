@@ -5,3 +5,4 @@ openai>=2.38.0
 python-dotenv>=1.2.2
 requests>=2.34.2
 reportlab>=3.6.12
+supabase>=2.30.1
