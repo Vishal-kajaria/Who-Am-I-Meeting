@@ -4,6 +4,7 @@ from dotenv import load_dotenv
 from langchain_core.prompts import PromptTemplate
 from reportlab.platypus import SimpleDocTemplate, Paragraph
 from reportlab.lib.styles import getSampleStyleSheet
+from supabase import create_client
 import requests
 import os
 import gradio as gr
@@ -15,6 +16,10 @@ load_dotenv()
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 SERPER_API_KEY = os.getenv("SERPER_API_KEY")
 
+supabase = create_client(
+    os.getenv("SUPABASE_URL"),
+    os.getenv("SUPABASE_KEY")
+)
 
 # Create OpenAI client
 llm = ChatOpenAI(
@@ -180,9 +185,19 @@ def generate_meeting_brief(name, company, meeting_type, search_info):
         f"{response['key_products_services']}\n\n"
     )
 
+
+def save_search(person_name, company_name, meeting_type):
+    supabase.table("meeting_history").insert(
+        {
+            "person_name": person_name,
+            "company_name": company_name,
+            "meeting_type": meeting_type
+        }
+    ).execute()
+
 def generate_pdf(content, company):
 
-    pdf_file = f"{company}_meeting_brief.pdf"
+    pdf_file = f"{company.replace(' ', '_')}_meeting_brief.pdf"
 
     doc = SimpleDocTemplate(pdf_file)
 
@@ -222,6 +237,8 @@ def who_am_i_meeting(name, company, meeting_type):
             meeting_type,
             search_info
         )
+
+        save_search(name,company,meeting_type)
 
         pdf_file = generate_pdf(meeting_brief, company)
         
