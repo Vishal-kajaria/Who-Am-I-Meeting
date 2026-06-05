@@ -57,6 +57,7 @@ Built and deployed using Gradio, OpenAI, LangChain, Serper API, Supabase, and Hu
 * Serper API
 * Supabase
 * Gradio
+* Docker
 * Git
 * GitHub
 * Hugging Face Spaces
@@ -121,6 +122,27 @@ The application will start locally at:
 ```text
 http://127.0.0.1:7860
 ```
+
+## Docker
+
+Build the Docker image:
+
+```bash
+docker build -t genai-meeting-assistant .
+```
+
+Run the container:
+
+```bash
+docker run -p 7860:7860 --env-file .env genai-meeting-assistant
+```
+
+The application will be available at:
+
+```text
+http://localhost:7860
+```
+
 
 ## How It Works
 
