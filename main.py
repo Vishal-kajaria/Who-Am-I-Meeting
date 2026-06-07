@@ -57,7 +57,7 @@ def search_company(company):
     }
 
     # Send request to Serper
-    response = requests.post(url, json=payload, headers=headers)
+    response = requests.post(url, json=payload, headers=headers, timeout=15)
     response.raise_for_status()
 
     # Convert response into Python dictionary
