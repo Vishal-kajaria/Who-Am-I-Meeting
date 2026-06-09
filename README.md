@@ -65,11 +65,22 @@ Built and deployed using Gradio, OpenAI, LangChain, Serper API, Supabase, and Hu
 ## Project Structure
 
 ```text
-main.py          # Main application
-README.md        # Project documentation
-pyproject.toml   # Project dependencies
-uv.lock          # Dependency lock file
-.env             # Environment variables (not committed)
+main.py                        # Entry point — launches the Gradio app
+README.md                      # Project documentation
+pyproject.toml                 # Project dependencies
+uv.lock                        # Dependency lock file
+requirements.txt               # Pip-compatible dependencies
+Dockerfile                     # Docker container setup
+.env                           # Environment variables (not committed)
+
+who_am_I_meeting/
+    config.py                  # Loads env variables & Supabase client
+    llm.py                     # OpenAI LLM & LangChain parser setup
+    search.py                  # Serper API — live company research
+    brief.py                   # LangChain prompt & brief generation
+    database.py                # Supabase read/write for meeting history
+    pdf.py                     # PDF export using ReportLab
+    ui.py                      # Gradio UI & all event handlers
 ```
 
 ## Architecture
