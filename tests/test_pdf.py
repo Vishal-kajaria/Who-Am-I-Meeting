@@ -5,6 +5,6 @@ from who_am_I_meeting.pdf import generate_pdf
                          [("Google","Google_meeting_brief.pdf"),
                           ("Apple India","Apple_India_meeting_brief.pdf"),
                           ("Youtube India Creators","Youtube_India_Creators_meeting_brief.pdf")])
-def test_pdf_filename_formats(company, expected_filename):
-    result = generate_pdf("test content", company)
+def test_pdf_filename_formats(sample_content, company, expected_filename):
+    result = generate_pdf(sample_content, company)
     assert result == expected_filename
